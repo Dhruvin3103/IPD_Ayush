@@ -3,22 +3,57 @@
  * @see https://v0.dev/t/RRIBVrKwp6d
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import Link from "next/link"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import Navbar_2 from "@/timepass/Navbar_2"
-import Image from "next/image"
-import home_page_pic_2 from "@/images/home_page_pic_2.png"
-import Footer from "@/timepass/Footer"
-import Map from "@/timepass/Map"
+"use client"
+import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import Navbar_2 from "@/timepass/Navbar_2";
+import Image from "next/image";
+import home_page_pic_2 from "@/images/home_page_pic_2.png";
+import Footer from "@/timepass/Footer";
+import Map from "@/timepass/Map";
 
 export default function Component() {
+  const [zone, setZone] = useState(null);
+
+  useEffect(() => {
+    // Get user's geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          // Make POST API call with geolocation data
+          fetch('http://127.0.0.1:8000/location/checkzone/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 'lat': latitude, 'lng':longitude })
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // Assuming the API response contains the zone information
+              setZone(data.status); // Adjust this based on your API response structure
+            })
+            .catch((error) => {
+              console.error("Error fetching zone data:", error);
+            });
+        },
+        (error) => {
+          console.error("Error getting geolocation:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  }, []);
   return (
     <>
-    <Navbar_2/>
-    <div className="space" style={{ padding: '20px' }}>
-  {/* Your content here */}
-</div>
+      <Navbar_2 />
+      <div className="space" style={{ padding: "20px" }}>
+        {/* Your content here */}
+      </div>
 
       {/* <div className="relative grid gap-6">
         <div className="absolute inset-0 w-full h-full bg-gray-900/10 rounded-lg backdrop-blur dark:bg-gray-50/10" />
@@ -46,7 +81,7 @@ export default function Component() {
             </div>
           </nav>
         </header> */}
-        {/* <div className="grid items-center min-h-screen gap-12 lg:gap-0 pt-16 lg:grid-cols-[1fr_800px] lg:pt-24 xl:grid-cols-[1fr_1100px]">
+      {/* <div className="grid items-center min-h-screen gap-12 lg:gap-0 pt-16 lg:grid-cols-[1fr_800px] lg:pt-24 xl:grid-cols-[1fr_1100px]">
           <div className="flex flex-col justify-center space-y-4 order-last px-6 lg:order-first lg:px-0">
             <div className="space-y-2">
               <h1 className="text-4xl font-bold tracking-tighter lg:text-6xl">Island Paradise</h1>
@@ -98,44 +133,43 @@ export default function Component() {
           </div>
         </div>
       </section> */}
-     <section className="">
-  <div className="px-4 md:px-6">
-    <div className="grid items-center gap-6 lg:grid-cols-[1fr_600px] lg:gap-12 xl:grid-cols-[1fr_800px]">
-      <div className="flex flex-col justify-center space-y-4">
-        <div className="space-y-2">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-            <span className="block">The Parking 🚘</span>
-            <span className="block ml-20">🚨Guardian</span>
-          </h2>
-          <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-            𝙰 𝚞𝚜𝚎𝚛-𝚏𝚛𝚒𝚎𝚗𝚍𝚕𝚢 ✌️ 𝚊𝚗𝚍 𝚎𝚏𝚏𝚒𝚌𝚒𝚎𝚗𝚝 𝚜𝚘𝚕𝚞𝚝𝚒𝚘𝚗 𝚍𝚎𝚜𝚒𝚐𝚗𝚎𝚍 𝚝𝚘 𝚊𝚍𝚍𝚛𝚎𝚜𝚜 𝚝𝚑𝚎 𝚙𝚛𝚘𝚋𝚕𝚎𝚖 𝚘𝚏 𝚒𝚕𝚕𝚎𝚐𝚊𝚕 𝚙𝚊𝚛𝚔𝚒𝚗𝚐 🚘🚨𝚊𝚗𝚍 𝚒𝚖𝚙𝚛𝚘𝚟𝚎 𝚘𝚟𝚎𝚛𝚊𝚕𝚕 𝚙𝚊𝚛𝚔𝚒𝚗𝚐 🅿️ 𝚖𝚊𝚗𝚊𝚐𝚎𝚖𝚎𝚗𝚝 𝚒𝚗 𝚞𝚛𝚋𝚊𝚗 𝚊𝚛𝚎𝚊𝚜
-          </p>
+      <section className="">
+        <div className="px-4 md:px-6">
+          <div className="grid items-center gap-6 lg:grid-cols-[1fr_600px] lg:gap-12 xl:grid-cols-[1fr_800px]">
+            <div className="flex flex-col justify-center space-y-4">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                  <span className="block">The Parking 🚘</span>
+                  <span className="block ml-20">🚨Guardian</span>
+                </h2>
+                <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
+                  𝙰 𝚞𝚜𝚎𝚛-𝚏𝚛𝚒𝚎𝚗𝚍𝚕𝚢 ✌️ 𝚊𝚗𝚍 𝚎𝚏𝚏𝚒𝚌𝚒𝚎𝚗𝚝 𝚜𝚘𝚕𝚞𝚝𝚒𝚘𝚗 𝚍𝚎𝚜𝚒𝚐𝚗𝚎𝚍 𝚝𝚘 𝚊𝚍𝚍𝚛𝚎𝚜𝚜
+                  𝚝𝚑𝚎 𝚙𝚛𝚘𝚋𝚕𝚎𝚖 𝚘𝚏 𝚒𝚕𝚕𝚎𝚐𝚊𝚕 𝚙𝚊𝚛𝚔𝚒𝚗𝚐 🚘🚨𝚊𝚗𝚍 𝚒𝚖𝚙𝚛𝚘𝚟𝚎 𝚘𝚟𝚎𝚛𝚊𝚕𝚕 𝚙𝚊𝚛𝚔𝚒𝚗𝚐
+                  🅿️ 𝚖𝚊𝚗𝚊𝚐𝚎𝚖𝚎𝚗𝚝 𝚒𝚗 𝚞𝚛𝚋𝚊𝚗 𝚊𝚛𝚎𝚊𝚜
+                </p>
+              </div>
+              <ul className="grid gap-2 py-4">
+                <li>
+                  <CheckIcon className="mr-2 inline-block h-4 w-4" />
+                  Smart Parking
+                </li>
+                <li>
+                  <CheckIcon className="mr-2 inline-block h-4 w-4" />
+                  Easy to Use
+                </li>
+                <li>
+                  <CheckIcon className="mr-2 inline-block h-4 w-4" />
+                  Facilitates Free Parking
+                </li>
+              </ul>
+            </div>
+            {/* Image part */}
+            <div className="lg:order-last">
+              <Image src={home_page_pic_2} className="rounded-lg shadow-xl" />
+            </div>
+          </div>
         </div>
-        <ul className="grid gap-2 py-4">
-          <li>
-            <CheckIcon className="mr-2 inline-block h-4 w-4" />
-            Smart Parking
-          </li>
-          <li>
-            <CheckIcon className="mr-2 inline-block h-4 w-4" />
-            Easy to Use
-          </li>
-          <li>
-            <CheckIcon className="mr-2 inline-block h-4 w-4" />
-            Facilitates Free Parking
-          </li>
-        </ul>
-      </div>
-      {/* Image part */}
-      <div className="lg:order-last">
-  <Image 
-    src={home_page_pic_2}
-    className="rounded-lg shadow-xl"
-  />
-</div>
-    </div>
-  </div>
-</section>
+      </section>
       {/* <section className="w-full py-12 lg:py-24">
         <div className="container px-4 md:px-6">
           <div className="grid items-center gap-6 lg:grid-cols-[1fr_600px] lg:gap-12 xl:grid-cols-[1fr_800px]">
@@ -174,36 +208,23 @@ export default function Component() {
       <section className="w-full py-12 lg:py-24">
         <div className=" mx-auto px-4 md:px-2">
           <div className="grid items-center gap-6 lg:grid-cols-[1fr_800px] lg:gap-12 xl:grid-cols-[1fr_800px]">
-            <Map/>
-            {/* <img
-              alt="Image"
-              className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center lg:aspect-square"
-              height="400"
-              src="/placeholder.svg"
-              width="600"
-            /> */}
-            <div className="flex flex-col justify-center space-y-4">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Fetching Real-Time Location 🗺️✅</h2>
-                <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                  {/* Encounter the enchanting beauty of the island's landscapes and ecosystems. */}
-                </p>
-              </div>
-              <ul className="grid gap-2 py-4">
-                <li>
-                  <ChevronRightIcon className="mr-2 inline-block h-4 w-4" />
-                  Get Notified in case of Wrong Parking Areas
-                </li>
-                <li>
-                  <ChevronRightIcon className="mr-2 inline-block h-4 w-4" />
-                  Observing rare bird species in the island's pristine habitats.
-                </li>
-                <li>
-                  <ChevronRightIcon className="mr-2 inline-block h-4 w-4" />
-                  Trekking through ancient forests and marveling at the diverse flora.
-                </li>
-              </ul>
-            </div>
+         
+            <Map />
+            {zone && (
+              <section className="w-full py-12 lg:py-24">
+                <div className=" mx-auto px-4 md:px-2">
+                  <div className="grid items-center gap-6 lg:grid-cols-[1fr_800px] lg:gap-12 xl:grid-cols-[1fr_800px]">
+                    {/* Display the zone information */}
+                    <div>
+
+                      <h2>Zone: {zone}</h2>
+                      {/* You can add more details about the zone here */}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+           
           </div>
         </div>
       </section>
@@ -245,9 +266,9 @@ export default function Component() {
           </div>
         </div>
       </footer> */}
-      <Footer/>
+      <Footer />
     </>
-  )
+  );
 }
 
 function CheckIcon(props) {
@@ -266,10 +287,8 @@ function CheckIcon(props) {
     >
       <polyline points="20 6 9 17 4 12" />
     </svg>
-    
-  )
+  );
 }
-
 
 function ChevronRightIcon(props) {
   return (
@@ -287,9 +306,8 @@ function ChevronRightIcon(props) {
     >
       <path d="m9 18 6-6-6-6" />
     </svg>
-  )
+  );
 }
-
 
 function MapIcon(props) {
   return (
@@ -309,9 +327,8 @@ function MapIcon(props) {
       <line x1="9" x2="9" y1="3" y2="18" />
       <line x1="15" x2="15" y1="6" y2="21" />
     </svg>
-  )
+  );
 }
-
 
 function PalmtreeIcon(props) {
   return (
@@ -332,9 +349,8 @@ function PalmtreeIcon(props) {
       <path d="M5.89 9.71c-2.15 2.15-2.3 5.47-.35 7.43l4.24-4.25.7-.7.71-.71 2.12-2.12c-1.95-1.96-5.27-1.8-7.42.35z" />
       <path d="M11 15.5c.5 2.5-.17 4.5-1 6.5h4c2-5.5-.5-12-1-14" />
     </svg>
-  )
+  );
 }
-
 
 function SunsetIcon(props) {
   return (
@@ -359,9 +375,8 @@ function SunsetIcon(props) {
       <path d="m16 6-4 4-4-4" />
       <path d="M16 18a4 4 0 0 0-8 0" />
     </svg>
-  )
+  );
 }
-
 
 function UmbrellaIcon(props) {
   return (
@@ -381,5 +396,5 @@ function UmbrellaIcon(props) {
       <path d="M12 12v8a2 2 0 0 0 4 0" />
       <path d="M12 2v1" />
     </svg>
-  )
+  );
 }

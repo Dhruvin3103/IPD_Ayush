@@ -178,7 +178,7 @@ export default function Component() {
             />
             <div className="flex flex-col justify-center space-y-4">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Fetching Real-Time Location 🗺️✅</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Fetching Real-Time Locatijon 🗺️✅</h2>
                 <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
                   {/* Encounter the enchanting beauty of the island's landscapes and ecosystems. */}
                 </p>
